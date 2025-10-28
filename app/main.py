@@ -49,18 +49,23 @@ class Battleship:
             cords = (start, end)
             if cords in self.field:
                 raise ValueError("Overlapping ships")
-            if  0 <= start < 10 and 0 <= end < 10:
-                ship = Ship(start, end)
-                self.ships.append(ship)
-            else:
-                raise ValueError("Ship out of board")
+            ship = Ship(start, end)
+            self.ships.append(ship)
+
+            for r, c in ship.cords:
+                if not (0 <= r < 10 and 0 <= c < 10):
+                    raise ValueError("ship out of board")
+                coord = (r, c)
+                if coord in self.field:
+                    raise ValueError(f"Overlapping ships at {coord}")
+                self.field[coord] = ship
 
     def fire(self, location: tuple):
         if not isinstance(location, tuple) and not len(location) == 2:
             return "Miss!"
 
         if location not in self.field:
-            return "Mis!"
+            return "Miss!"
 
         ship = self.field[location]
         result = ship.fire(*location)
