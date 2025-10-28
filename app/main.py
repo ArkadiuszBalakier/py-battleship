@@ -59,9 +59,10 @@ class Battleship:
                 if coord in self.field:
                     raise ValueError(f"Overlapping ships at {coord}")
                 self.field[coord] = ship
+        self._validate_field()
 
     def fire(self, location: tuple):
-        if not isinstance(location, tuple) and not len(location) == 2:
+        if not isinstance(location, tuple) or not len(location) == 2:
             return "Miss!"
 
         if location not in self.field:
