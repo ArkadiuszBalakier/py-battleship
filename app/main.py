@@ -4,7 +4,7 @@ class Ship:
             self,
             start: tuple,
             end: tuple,
-            is_drowned: bool= False
+            is_drowned: bool = False
     ) -> None:
         ship_cords = set()
         r1, c1 = start
