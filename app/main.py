@@ -1,10 +1,11 @@
-class Deck:
-    def __init__(self, row, column, is_alive=True):
-        pass
-
 
 class Ship:
-    def __init__(self, start: tuple, end: tuple, is_drowned=False):
+    def __init__(
+            self,
+            start: tuple,
+            end: tuple,
+            is_drowned: bool= False
+    ) -> None:
         ship_cords = set()
         r1, c1 = start
         r2, c2 = end
@@ -25,13 +26,12 @@ class Ship:
         self.is_drowned = True
         return "Sunk!"
 
-
-    def get_deck(self, row, column) -> bool:
+    def get_deck(self, row: int, column: int) -> bool:
         if (row, column) in self.cords:
             return True
         return False
 
-    def fire(self, row, column) -> str:
+    def fire(self, row: int, column: int) -> str:
         if self.get_deck(row, column):
             self.hits.add((row, column))
             if self.hits == self.cords:
@@ -42,7 +42,7 @@ class Ship:
 
 
 class Battleship:
-    def __init__(self, ships):
+    def __init__(self, ships: list) -> None:
         self.ships = []
         self.field = {}
         for start, end in ships:
@@ -52,16 +52,16 @@ class Battleship:
             ship = Ship(start, end)
             self.ships.append(ship)
 
-            for r, c in ship.cords:
-                if not (0 <= r < 10 and 0 <= c < 10):
+            for row, col in ship.cords:
+                if not (0 <= row < 10 and 0 <= col < 10):
                     raise ValueError("ship out of board")
-                coord = (r, c)
+                coord = (row, col)
                 if coord in self.field:
                     raise ValueError(f"Overlapping ships at {coord}")
                 self.field[coord] = ship
         self._validate_field()
 
-    def fire(self, location: tuple):
+    def fire(self, location: tuple) -> str:
         if not isinstance(location, tuple) or not len(location) == 2:
             return "Miss!"
 
@@ -74,10 +74,10 @@ class Battleship:
 
     def _validate_field(self) -> None:
         expected_ship_count = {
-            4:1,
-            3:2,
-            2:3,
-            1:4
+            4: 1,
+            3: 2,
+            2: 3,
+            1: 4
         }
 
         for ship in self.ships:
