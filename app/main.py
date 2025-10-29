@@ -36,8 +36,7 @@ class Ship:
             self.hits.add((row, column))
             if self.hits == self.cords:
                 return self.is_sunk()
-            else:
-                return "Hit!"
+            return "Hit!"
         return "Miss!"
 
 
@@ -53,13 +52,17 @@ class Battleship:
             self.ships.append(ship)
 
             for row, col in ship.cords:
-                if not (0 <= row < 10 and 0 <= col < 10):
+                if not Battleship._in_bounds(row, col):
                     raise ValueError("ship out of board")
                 coord = (row, col)
                 if coord in self.field:
                     raise ValueError(f"Overlapping ships at {coord}")
                 self.field[coord] = ship
         self._validate_field()
+
+    @staticmethod
+    def _in_bounds(row: int, column: int) -> bool:
+        return 0 <= row < 10 and 0 <= column < 10
 
     def fire(self, location: tuple) -> str:
         if not isinstance(location, tuple) or not len(location) == 2:
@@ -90,3 +93,26 @@ class Battleship:
 
         if actual_ship_counts != expected_ship_count:
             raise ValueError("Invalid ship count")
+
+        for row, col in self.field:
+            current_ship = self.field[(row, col)]
+
+            for dr in (-1, 0, 1):
+                for dc in (-1, 0, 1):
+                    if dr == 0 and dc == 0:
+                        continue
+                    next_ship_row, next_ship_col = row + dr, col + dc
+                    if not self._in_bounds(next_ship_row, next_ship_col):
+                        continue
+
+                    if (next_ship_row, next_ship_col) in self.field:
+                        neighbour_ship = self.field[(
+                            next_ship_row,
+                            next_ship_col
+                        )]
+
+                        if neighbour_ship not in current_ship:
+                            raise ValueError(
+                                f"Ships are adjacent at ({row}, {col})"
+                                f" and ({next_ship_row}, {next_ship_col})"
+                            )
