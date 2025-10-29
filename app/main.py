@@ -111,7 +111,7 @@ class Battleship:
                             next_ship_col
                         )]
 
-                        if neighbour_ship not in current_ship:
+                        if neighbour_ship is not current_ship:
                             raise ValueError(
                                 f"Ships are adjacent at ({row}, {col})"
                                 f" and ({next_ship_row}, {next_ship_col})"
